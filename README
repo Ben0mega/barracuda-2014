@@ -1,0 +1,16 @@
+Build
+==================
+Linux:
+
+Must have cmake and gcc installed.  Tested with cmake 2.8.7 and gcc 4.6.3
+
+#make
+#export LD_LIBRARY_PATH=game_io/:jsoncpp/src/lib_json/:json_socket
+#./client
+
+Connects to cuda.contest:9999 by default, can be changed in client.cpp.
+
+
+Windows:
+
+There is a Visual Studio 2012 project in the vs2012/ subdirectory.
