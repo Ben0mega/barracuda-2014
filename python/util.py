@@ -19,9 +19,9 @@ def getNextHighestCard(msg, theirCard):
     return card
 
 def canTie(msg, theirCard):
-	if theirCard in msg["state"]["hand"]:	
-		return True
-	return False
+    if theirCard in msg["state"]["hand"]:    
+        return True
+    return False
 
 def shouldStartChallenge(msg):
     tautology = testShouldChallengeTautology(msg)
@@ -94,8 +94,8 @@ def respondToPlay(msg, theirCard):
     if tautology != None:
         return tautology
     
-	#if canTie(msg, theirCard):
-		#return theirCard
+    #if canTie(msg, theirCard):
+        #return theirCard
 
     card = min(msg["state"]["hand"])
     if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
