@@ -11,6 +11,11 @@ def ahead(msg):
 def opponentAboutToWin(msg):
     return msg["state"]["their_points"] == 9
 
+def tricksToWin(msg):
+    handsLeft = 6 - msg["state"]["hand_id"]
+    tiedGames = (msg["state"]["total_tricks"] - msg["state"]["their_tricks"]) - msg["state"]["your_tricks"]
+    return (handsLeft - tiedGames)/2 + 1
+
 def calculateHandScore(msg, deck):
     handScore = 0    
     for card in msg["state"]["hand"]:
