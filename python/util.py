@@ -1,22 +1,19 @@
-def getHighestCard(msg):
-	maxCard = 0
-	for card in msg["state"]["hand"]:
-		if card > maxCard:
-			maxCard = card
-	return maxCard
+def getLeadCard(msg):
+	cards = sorted(msg["state"]["hand"])
+	index = int(len(cards)/2)
+	card = cards[index];
+	return card
 
-def getNextHighestCard(msg, theirCard):
+def respondToPlay(msg, theirCard):
 # if there is no highest card, it returns the lowest card
-	minCard = 16
-	bestCard = msg["state"]["hand"][0]
-	for card in msg["state"]["hand"]:
-		if card < minCard:
-			minCard = card
-		if card > theirCard and card < bestCard:
-			bestCard = card
-	if bestCard < theirCard:
-		return minCard
-	return bestCard
+	card = min(msg["state"]["hand"])
+	for a in msg["state"]["hand"]:
+		if card < theirCard and a == theirCard:
+			card = theirCard
+		elif a > theirCard:
+			if a < card or card <= theirCard:
+				card = a
+	return card
 
 class CardCounter:
 	cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
