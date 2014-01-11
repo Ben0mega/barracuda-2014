@@ -1,28 +1,32 @@
 class CardCounter:
+    total = 104    
     cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
     
     def __init__(self):
         # there are 8 of each type of card
         #                   A  2  3  4  5  6  7  8  9  10 J  Q  K
         self.cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
-    
+        self.total = 104    
+
     def shuffle(self):
         __init__(self)
 
     def cardRevealed(self, card):
+        total -= 1
         self.cardTallies[card-1] -= 1
+        if self.cardTallies[card-1] < 0:
+            print("ERROR: " + str(card))
 
     def probabilityOfCard(self, card):
-        total = 0
-        for tally in cardTallies:
-            total += tally
+        if total == 0:
+            print("FUCK")
         return self.cardTallies[card-1]/total
 
     def cardScore(self, card):
-        total = 0
-        number = 0
-        for value in range(1, 13):
-            number += self.cardTallies[value-1]
-            total += value * self.cardTallies[value-1]
-        return card - (total/number)
+        tally = 0
+        for value in range(0, 12):
+            tally += (value + 1) * self.cardTallies[value]
+        if number == 0:
+            print("SHIT")        
+        return card - (tally/total)
 

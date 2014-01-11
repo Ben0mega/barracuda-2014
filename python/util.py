@@ -34,7 +34,7 @@ def canTie(msg, theirCard):
     return False
 
 def isLastCard(msg):
-	return len(msg["state"]["hand"]) == 1
+    return len(msg["state"]["hand"]) == 1
 
 def shouldStartChallenge(msg, deck):
     if testShouldChallengeTautology(msg):
@@ -53,8 +53,8 @@ def shouldStartChallenge(msg, deck):
     if behind(msg):
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
            return True 
-	
-    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) <= 6 or len(msg["state"]["hand"]) == 1:
+    
+    if len(msg["state"]["hand"]) == 1:
         return True
 
     if not isLastCard(msg) and float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 9.5:
