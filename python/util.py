@@ -14,7 +14,7 @@ def opponentAboutToWin(msg):
 def shouldStartChallenge(msg):
     tautology = testShouldChallengeTautology(msg)
     if tautology != None:
-		return tautology
+        return tautology
 
     if opponentAboutToWin(msg):
         return True
@@ -42,15 +42,15 @@ def shouldStartChallenge(msg):
 def shouldAcceptChallenge(msg):
     tautology = testAcceptChallengeTautology(msg)
     if tautology != None:
-    	return tautology
-	
+        return tautology
+    
     if ahead(msg):
-    	return False
+        return False
     if opponentAboutToWin(msg):
-    	return True
+        return True
     #when behind, dark shrine
     if behind(msg):
-    	return True 
+        return True 
     if aheadByEnoughTricks(msg):
         return True
     card_count = 0
@@ -58,7 +58,7 @@ def shouldAcceptChallenge(msg):
         if a > 10:
             card_count += 1
     if card_count >= 3:
-    	return True
+        return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
@@ -111,8 +111,8 @@ def testTrailCardTautology(msg, theirCard):
         return nextHighest
 
 def testAcceptChallengeTautology(msg):
-	return None
+    return None
 
 def testShouldChallengeTautology(msg):
-	return None
+    return None
 
