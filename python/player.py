@@ -64,15 +64,15 @@ def sample_bot(host, port):
             
             #REQUEST PLAY A CARD
             if msg["request"] == "request_card":
-				#FIRST ROUND
+                #FIRST ROUND
                 if len(msg["state"]["hand"]) == 5:
                     for card in msg["state"]["hand"]:
                         deck.cardRevealed(card)
                 
                 #YOU GO SECOND
                 if "card" in msg["state"].keys():
-					deck.cardRevealed(msg["state"]["card"])
-					cardToPlay = respondToPlay(msg, msg["state"]["card"])  					
+                    deck.cardRevealed(msg["state"]["card"])
+                    cardToPlay = respondToPlay(msg, msg["state"]["card"])                      
 
                 #YOU GO FIRST
                 else:
@@ -86,11 +86,11 @@ def sample_bot(host, port):
                 else:
                     rejectChallenge(msg);
         elif msg["type"] == "result":
-			if msg["your_player_num"] == 0:
-				if msg["result"]["type"] == "trick_won" or msg["result"]["type"] == "trick_lost":
-					deck.cardRevealed(msg["result"]["card"]);
-				elif msg["result"]["type"] == "trick_tied":
-					deck.cardRevealed(cardToPlay); # defined as the last card you played
+            if msg["your_player_num"] == 0:
+                if msg["result"]["type"] == "trick_won" or msg["result"]["type"] == "trick_lost":
+                    deck.cardRevealed(msg["result"]["card"]);
+                elif msg["result"]["type"] == "trick_tied":
+                    deck.cardRevealed(cardToPlay); # defined as the last card you played
             #elif msg["result"            
     
         elif msg["type"] == "greetings_program":

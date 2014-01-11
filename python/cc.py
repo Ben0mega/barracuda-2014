@@ -3,7 +3,7 @@ class CardCounter:
     
     def __init__(self):
         # there are 8 of each type of card
-        #               	A  2  3  4  5  6  7  8  9  10 J  Q  K
+        #                   A  2  3  4  5  6  7  8  9  10 J  Q  K
         self.cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
     
     def shuffle(self):
