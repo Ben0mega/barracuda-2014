@@ -58,13 +58,13 @@ def getNextHighestCard(msg, theirCard):
     return card
 
 def getLeadCard(msg):
-    tautology = testLeadCardTautology(msg)
+	tautology = testLeadCardTautology(msg)
 	if tautology != None:
 		return tautology
 	
 	cards = sorted(msg["state"]["hand"])
-    index = int(len(cards)/2)
-    card = cards[index];
+	index = int(len(cards)/2)
+	card = cards[index];
     return card
 
 def respondToPlay(msg, theirCard):
