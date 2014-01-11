@@ -80,7 +80,7 @@ def shouldStartChallenge(msg, deck):
         return True
 
     if msg["state"]["your_points"] == 9:
-        if calculateHandScore(msg, deck) > 11:
+        if calculateHandScore(msg, deck) > 12:
                 return True
         
     if not isLastCard(msg) and calculateHandScore(msg, deck) > 10:
@@ -138,6 +138,8 @@ def getLeadCard(msg):
     
     cards = sorted(msg["state"]["hand"])
     index = int(len(cards)/2)
+	if len(cards) > 0 and len(cards) % 2 == 0:
+		index -= 1
     card = cards[index];
     return card
 
