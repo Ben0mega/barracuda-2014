@@ -22,6 +22,12 @@ class CardCounter:
             print("FUCK")
         return self.cardTallies[card-1]/total
 
+    def probabilityOfHigher(self, card):
+        prob = 0
+        for card in {card-1, 12}
+            prob += self.probabilityOfCard(card)
+        return prob
+
     def cardScore(self, card):
         tally = 0
         for value in range(0, 12):

@@ -65,27 +65,27 @@ def shouldStartChallenge(msg, deck):
          return True
     #when behind, dark shrine
     if behind(msg):
-        if averageHandValue(msg, 8):
+        if calculateHandScore(msg, deck) > 8:
            return True 
     
     if len(msg["state"]["hand"]) == 1:
         return True
 
-    if not isLastCard(msg) and averageHandValue(msg, 9.5):
+    if not isLastCard(msg) and calculateHandScore(msg, deck) > 9.5:
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
         return True
 
     if msg["state"]["your_points"] == 8:
-        if averageHandValue(msg, 10):
+        if calculateHandScore(msg, deck) > 10:
             return True
     if msg["state"]["your_points"] == 9:
-        if averageHandValue(msg, 11):
+        if calculateHandScore(msg, deck) > 11:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if averageHandValue(msg, 10.2) and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
+        if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
             return True
     return False
 
@@ -106,7 +106,7 @@ def shouldAcceptChallenge(msg, deck):
            return True 
     if msg["state"]["your_tricks"]+count_num_card(msg, 12) >=3:
          return True
-    if averageHandValue(msg, 10.2) and len(msg["state"]["hand"]) > 1:
+    if calculateHandScore(msg, deck) > 10.2 and len(msg["state"]["hand"]) > 1:
         return True
     if aheadByEnoughTricks(msg):
         if not isLastCard(msg) and calculateHandScore(msg, deck) > 11: #averageHandValue(msg, 11):
