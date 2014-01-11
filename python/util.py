@@ -41,7 +41,7 @@ def canTie(msg, theirCard):
 def isLastCard(msg):
     return len(msg["state"]["hand"]) == 1
 
-def averageHandValue(msg, min_val):
+def averageHandValue(msg, min_val):    
     return float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= min_val
 
 def neededToWin(msg):
@@ -102,21 +102,21 @@ def shouldAcceptChallenge(msg, deck):
         return True
     #when behind, dark shrine
     if behind(msg):
-        if averageHandValue(msg, 9.4):
+        if calculateHandScore(msg, deck) > 9.4: #averageHandValue(msg, 9.4):
            return True 
     if msg["state"]["your_tricks"]+count_num_card(msg, 12) >=3:
          return True
     if averageHandValue(msg, 10.2) and len(msg["state"]["hand"]) > 1:
         return True
     if aheadByEnoughTricks(msg):
-        if not isLastCard(msg) and averageHandValue(msg, 11):
+        if not isLastCard(msg) and calculateHandScore(msg, deck) > 11: #averageHandValue(msg, 11):
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if averageHandValue(msg, 10.2) and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
+        if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
             return True
-        if not isLastCard(msg) and msg["state"]["your_points"] == 9 and averageHandValue(msg, 9.4):
+        if not isLastCard(msg) and msg["state"]["your_points"] == 9 and calculateHandScore(msg, deck) > 9.4: #averageHandValue(msg, 9.4):
             return True
     return False
 
