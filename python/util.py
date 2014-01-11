@@ -138,8 +138,8 @@ def getLeadCard(msg):
     
     cards = sorted(msg["state"]["hand"])
     index = int(len(cards)/2)
-	if len(cards) > 0 and len(cards) % 2 == 0:
-		index -= 1
+    if len(cards) > 0 and len(cards) % 2 == 0:
+        index -= 1
     card = cards[index];
     return card
 
