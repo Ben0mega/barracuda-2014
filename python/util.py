@@ -89,9 +89,6 @@ def respondToPlay(msg, theirCard):
     if tautology != None:
         return tautology
     
-    #if canTie(msg, theirCard):
-        #return theirCard
-
     card = min(msg["state"]["hand"])
     if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
         return card
@@ -104,6 +101,10 @@ def respondToPlay(msg, theirCard):
                 card = a
     if (theirCard - min(msg["state"]["hand"])) > 2 and (card - theirCard) > 3 and msg["state"]["their_tricks"] < 2:
         card = min(msg["state"]["hand"])
+
+    if canTie(msg, theirCard) and card < theirCard:
+        return theirCard
+
     return card
 
 def testLeadCardTautology(msg):
