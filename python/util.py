@@ -11,22 +11,9 @@ def ahead(msg):
 def opponentAboutToWin(msg):
     return msg["state"]["their_points"] == 9
 
-def getNextHighestCard(msg, theirCard):
-    card = min(msg["state"]["hand"])
-    for a in msg["state"]["hand"]:
-        if a < card or card <= theirCard:
-            card = a
-    return card
-
-def canTie(msg, theirCard):
-    if theirCard in msg["state"]["hand"]:    
-        return True
-    return False
-
 def shouldStartChallenge(msg):
-    tautology = testShouldChallengeTautology(msg)
-    if tautology != None:
-        return tautology
+    if testShouldChallengeTautology(msg):
+	     return True
 
     if opponentAboutToWin(msg):
         return True
@@ -52,9 +39,8 @@ def shouldStartChallenge(msg):
     return False
 
 def shouldAcceptChallenge(msg):
-    tautology = testAcceptChallengeTautology(msg)
-    if tautology != None:
-        return tautology
+    if testAcceptChallengeTautology(msg):
+        return True
     
     if ahead(msg):
         return False
@@ -76,7 +62,12 @@ def shouldAcceptChallenge(msg):
             return True
     return False
 
-
+def getNextHighestCard(msg, theirCard):
+    card = min(msg["state"]["hand"])
+    for a in msg["state"]["hand"]:
+        if a < card or card <= theirCard:
+            card = a
+    return card
 
 def getLeadCard(msg):
     tautology = testLeadCardTautology(msg)
@@ -94,9 +85,6 @@ def respondToPlay(msg, theirCard):
     if tautology != None:
         return tautology
     
-    #if canTie(msg, theirCard):
-        #return theirCard
-
     card = min(msg["state"]["hand"])
     if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
         return card
@@ -121,8 +109,14 @@ def testTrailCardTautology(msg, theirCard):
         return nextHighest
 
 def testAcceptChallengeTautology(msg):
-    return None
+	cards = sorted(msg["state"]["hand"])
+	if cards[0] == 13 and cards[-1] == 13:
+		return True
+	return False
 
 def testShouldChallengeTautology(msg):
-    return None
+	cards = sorted(msg["state"]["hand"])
+	if cards[0] == 13 and cards[-1] == 13:
+		return True
+	return False
 
