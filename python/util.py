@@ -124,6 +124,8 @@ def shouldAcceptChallenge(msg, deck):
     if aheadByEnoughTricks(msg):
         if calculateHandScore(msg, deck) > 11: #averageHandValue(msg, 11):
             return True
+	if count_num_card(msg, 11) > 2 and msg["state"]["your_points"]:
+		return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
