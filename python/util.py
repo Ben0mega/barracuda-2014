@@ -11,6 +11,12 @@ def ahead(msg):
 def opponentAboutToWin(msg):
     return msg["state"]["their_points"] == 9
 
+def calculateHandScore(msg, deck):
+	handScore = 0	
+	for card in msg["state"]["hand"]:
+		handScore += deck.cardScore(card)
+	return handScore
+
 def getNextHighestCard(msg, theirCard):
 #Returns the min card when there is no next highest    
     minCard = min(msg["state"]["hand"])
@@ -27,9 +33,12 @@ def canTie(msg, theirCard):
         return True
     return False
 
-def shouldStartChallenge(msg):
+def shouldStartChallenge(msg, deck):
     if testShouldChallengeTautology(msg):
          return True
+
+    if calculateHandScore(msg, deck) > 0.5:
+		return True
 
     if opponentAboutToWin(msg):
         return True
@@ -54,9 +63,12 @@ def shouldStartChallenge(msg):
             return True
     return False
 
-def shouldAcceptChallenge(msg):
+def shouldAcceptChallenge(msg, deck):
     if testAcceptChallengeTautology(msg):
         return True
+
+	if calculateHandScore(msg, deck) > 0.5:
+		return True
     
     if ahead(msg):
         return False
