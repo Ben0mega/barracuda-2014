@@ -26,7 +26,7 @@ class CardCounter:
         tally = 0
         for value in range(0, 12):
             tally += (value + 1) * self.cardTallies[value]
-        if number == 0:
+        if self.total == 0:
             print("SHIT")        
         return card - (tally/self.total)
 
