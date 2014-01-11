@@ -11,6 +11,18 @@ def ahead(msg):
 def opponentAboutToWin(msg):
     return msg["state"]["their_points"] == 9
 
+def getNextHighestCard(msg, theirCard):
+    card = min(msg["state"]["hand"])
+    for a in msg["state"]["hand"]:
+        if a < card or card <= theirCard:
+            card = a
+    return card
+
+def canTie(msg, theirCard):
+    if theirCard in msg["state"]["hand"]:    
+        return True
+    return False
+
 def shouldStartChallenge(msg):
     if testShouldChallengeTautology(msg):
 	     return True
@@ -48,26 +60,18 @@ def shouldAcceptChallenge(msg):
         return True
     #when behind, dark shrine
     if behind(msg):
-        return True 
+       return True 
+    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        return True
     if aheadByEnoughTricks(msg):
-        return True
-    card_count = 0
-    for a in msg["state"]["hand"]:
-        if a > 10:
-            card_count += 1
-    if card_count >= 3:
-        return True
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+            return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
     return False
 
-def getNextHighestCard(msg, theirCard):
-    card = min(msg["state"]["hand"])
-    for a in msg["state"]["hand"]:
-        if a < card or card <= theirCard:
-            card = a
-    return card
+
 
 def getLeadCard(msg):
     tautology = testLeadCardTautology(msg)
@@ -85,6 +89,9 @@ def respondToPlay(msg, theirCard):
     if tautology != None:
         return tautology
     
+    #if canTie(msg, theirCard):
+        #return theirCard
+
     card = min(msg["state"]["hand"])
     if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
         return card
