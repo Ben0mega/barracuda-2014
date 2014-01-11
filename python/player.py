@@ -11,6 +11,7 @@ from util import *
 from cc import *
 
 s = 0
+deck = 0
 
 #DUMB FUNCTIONS
 def canChallenge(msg):
@@ -44,6 +45,8 @@ def sample_bot(host, port):
     s = SocketLayer(host, port)
 
     gameId = None
+    
+    global deck
     deck = CardCounter()
 
     while True:
@@ -59,7 +62,7 @@ def sample_bot(host, port):
                 print("New game started: " + str(gameId))
             
             #SHOULD CHALLENGE
-            if shouldStartChallenge(msg) and canChallenge(msg):
+            if shouldStartChallenge(msg, deck) and canChallenge(msg):
                 sendChallenge(msg)    
             
             #REQUEST PLAY A CARD
@@ -81,7 +84,7 @@ def sample_bot(host, port):
             
             #THEY CHALLENGE YOU
             elif msg["request"] == "challenge_offered":
-                if shouldAcceptChallenge(msg):
+                if shouldAcceptChallenge(msg, deck):
                     acceptChallenge(msg);
                 else:
                     rejectChallenge(msg);
