@@ -37,3 +37,4 @@ class CardCounter:
 		for tally in cardTallies:
 			total += tally
 		return cardTallies[card]/total
+
