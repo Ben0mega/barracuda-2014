@@ -8,11 +8,32 @@ import struct
 import time
 import sys
 
-def shouldChallenge(msg):
-	if msg["state"]["their_tricks"] < 3:									# can you win the challenge?
-		if msg["state"]["their_tricks"] - msg["state"]["their_tricks"] < 3: # are you ahead enough
-			return True
+def canChallenge(msg):
+	if msg["state"]["can_challenge"] == True:
+		return True
 	return False
+
+def sendChallenge(msg):
+	if canChallenge(msg):
+		s.send({"type": "move", "request_id": msg["request_id"], 
+			"response": {"type": "offer_challenge"}})
+	else:
+		print("ERROR: can't actually send the challenge, stupid")
+		exit(1)
+
+def acceptChallenge(msg):
+	s.send({"type": "move", "request_id": msg["request_id"],
+		"response": {"type": "accept_challenge"}})
+
+def rejectChallenge(msg):
+	s.send({"type": "move", "request_id": msg["request_id"],
+		"response": {"type": "reject_challenge"}})
+
+def shouldChallenge(msg):
+	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
+		return True
+	return False
+
 
 def sample_bot(host, port):
 	s = SocketLayer(host, port)
@@ -25,10 +46,8 @@ def sample_bot(host, port):
 			print("The server doesn't know your IP. It saw: " + msg["seen_host"])
 			sys.exit(1)
 		elif msg["type"] == "request":
-			if msg["state"]["can_challenge"] == True:	# can you challenge?
-				if shouldChallenge(msg):
-					s.send({"type": "move", "request_id": msg["request_id"], 
-						"response": {"type": "offer_challenge"}})
+			if shouldChallenge(msg):
+				sendChallenge(msg)	
 			if msg["state"]["game_id"] != gameId:
 				gameId = msg["state"]["game_id"]
 				print("New game started: " + str(gameId))
@@ -38,10 +57,9 @@ def sample_bot(host, port):
 					"response": {"type": "play_card", "card": cardToPlay}})
 			elif msg["request"] == "challenge_offered":
 				if shouldChallenge(msg):
-					s.send({"type": "move", "request_id": msg["request_id"],
-						"response": {"type": "accept_challenge"}})
-				#s.send({"type": "move", "request_id": msg["request_id"],
-                #        "response": {"type": "reject_challenge"}})
+					acceptChallenge();
+				else:
+					rejectChallenge();
 		elif msg["type"] == "greetings_program":
 			print("Connected to the server.")
 
