@@ -115,24 +115,12 @@ def shouldAcceptChallenge(msg, deck):
     if behind(msg):
         if calculateHandScore(msg, deck) > 10: #averageHandValue(msg, 9.4):
            return True 
-    if msg["state"]["your_tricks"]+count_num_card(msg, 12) >=3:
+    if msg["state"]["your_tricks"]+count_num_card(msg, 11) >=neededToWin(msg):
          return True
-    if calculateHandScore(msg, deck) > 10.2 and len(msg["state"]["hand"]) > 1:
-        return True
+	if msg["state"]["your_points"] == 9 and count_num_card(msg, 11) > 2:
+		return True
     if isLastCard(msg):
         return False
-    if aheadByEnoughTricks(msg):
-        if calculateHandScore(msg, deck) > 11: #averageHandValue(msg, 11):
-            return True
-    if count_num_card(msg, 11) > 2 and msg["state"]["your_points"]:
-        return True
-    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
-        if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
-            return False
-        if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
-            return True
-        if msg["state"]["your_points"] == 9 and calculateHandScore(msg, deck) > 10.5: #averageHandValue(msg, 9.4):
-            return True
     return False
 
 
