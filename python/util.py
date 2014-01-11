@@ -14,7 +14,7 @@ def opponentAboutToWin(msg):
 def getNextHighestCard(msg, theirCard):
     card = min(msg["state"]["hand"])
     for a in msg["state"]["hand"]:
-        if a < card or card <= theirCard:
+        if a < card and a > theirCard:
             card = a
     return card
 
