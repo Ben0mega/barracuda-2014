@@ -47,7 +47,7 @@ def averageHandValue(msg, min_val):
     return float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= min_val
 
 def neededToWin(msg):
-    return math.ceil(len(msg["state"]["hand"]) + msg["state"]["their_points"] + msg["state"]["your_points"] + 1 / 2)
+    return math.ceil((len(msg["state"]["hand"]) + msg["state"]["their_points"] + msg["state"]["your_points"] + 1) / 2)
 
 def count_num_card(msg, card_val):
     return len( [ a for a in msg["state"]["hand"] if a >= card_val])
