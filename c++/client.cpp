@@ -9,6 +9,22 @@
 #include "client.h"
 #include "json_socket/json_socket.h"
 #include <algorithm>
+int choice;
+int won;
+
+double cost(int opp_c, vector<int>& hand, int choice, game_state& gs){
+	int sum = 0;
+	for(auto c : hand) sum+=c;
+	
+	double ret = double(sum)/hand.size() - double(sum-choice)/(hand.size()-1);
+	if(opp_c > choice){
+		ret += gs.their_tricks;
+	} else if(opp_c < choice){
+		ret+= -1.0;
+	}
+
+	return ret;
+}
 
 void client::error(error_msg* err) {
     cout << "error: " << err->message << endl;
@@ -20,35 +36,53 @@ move_response* client::move(move_request* req) {
 		value+=card;
 	}
 	if (value > 50 && req->state->can_challenge) {
+		cerr << "Challenging!\n";
 		return new offer_challenge();
 	}
 
-	int choice = req->state->hand.front();
-	if(req->state->opp_lead){
+	choice = req->state->hand.front();
+	if(req->state->opp_lead &&  req->state->card){
 		int opp_card = req->state->card;
+		auto min_cost = cost(opp_card, req->state->hand, req->state->hand.front(), *req->state);
 		for(auto card : req->state->hand){
-			// if our card wins
-			if(card > opp_card){
-				//if our current choice loses...
-				if(choice < opp_card) choice = card;
-				//if our current choice wins, but is higher than card
-				else choice = min(choice,card);
-			} else if(card < opp_card){
-				if(choice > opp_card) continue;
-				choice = min(choice, card);
+			auto temp_cost = cost(opp_card, req->state->hand, card, *req->state);
+			if(temp_cost < min_cost){
+				min_cost = temp_cost;
+				choice = card;
 			}
 		}
+		if(req->state->their_tricks >= 2 && choice < opp_card){
+			for(auto c : req->state->hand) choice = max(c, choice);
+		}
+
+		cerr << "They played " << opp_card << '\n';
+		cerr << "We respond: ";
+		if(choice > opp_card) won = 1;
+		else if(choice < opp_card) won = -1;
+		else won = 0;
+	
 	} else {
+		won = 0;
+		int choice2 = 14;
 		for(auto card : req->state->hand){
+			if(card > 7) choice2 = min(choice2, card);
 			choice = max(choice, card);
 		}
-	}
-	for(auto it = req->state->hand.begin(); it != req->state->hand.end(); ++it){
-		if(*it == choice){
-			req->state->hand.erase(it);
-			break;
+		if(req->state->their_tricks < 2 && choice2 != 14){
+			choice = choice2;
 		}
+		/*int sum = 0;
+		for(auto card : req->state->hand) sum+= card;
+		
+		if(sum < 40){
+			for(auto card: req->state->hand){
+				choice = min(choice, card);
+			}
+		}*/
+		cerr << "We play: ";
 	}
+	cerr << choice << '\n';
+	cerr << "I am: " << req->state->player_number << '\n';
 	cerr << "Cards: ";
 	for(auto card : req->state->hand){
 		cerr << card << ',';
@@ -57,41 +91,36 @@ move_response* client::move(move_request* req) {
     return new play_card_response(choice);
 }
 
-bool highest_num_cards(int num, vector<int>& hand)
+bool highest_num_cards(int num, move_request* req)
 {
+	vector<int> &loc_hand=req->state->hand;
+
 	int max = 13;
-	for (int i = hand.size() - 1; i > num; --i) {
-		if (hand[i] < max)
-			return false;
+	int count = 0;
+	for(auto c : loc_hand){
+		if(c == max) count++;
 	}
+	return count == num;
 }
 
 challenge_response* client::challenge(move_request* req) {
-	auto tricks_won = req->state->your_tricks;
-	if (tricks_won >= 3) {
+	auto& state = req->state;
+	auto tricks_won = state->your_tricks;
+	auto tricks_lost = state->their_tricks;
+	auto tricks_rem = state->hand.size();
+	auto tricks_needed = tricks_lost + tricks_rem - tricks_won;
+
+	if (tricks_needed <= 0) {
+		cerr << "Challenge Accepted!\n";
 		return new challenge_response(true);
 	}
 
-	sort(req->state->hand.begin(), req->state->hand.end());
-
-	if (tricks_won == 2 && highest_num_cards(1, req->state->hand, )) {
+	if (highest_num_cards(tricks_needed, req)) {
+		cerr << "Challenge Accepted!\n";
 		return new challenge_response(true);
 	}
 
-	if (tricks_won == 1 && highest_num_cards(2, req->state->hand)) {
-		return new challenge_response(true);
-	}
-
-	if (tricks_won == 0 && highest_num_cards(3, req->state->hand)) {
-		return new challenge_response(true);
-	}
-
-	auto value = 0;
-	for(auto card : req->state->hand){
-		value+=card;
-	}
-	if(value*100/req->state->hand.size() > 9)
-		return new challenge_response(true);
+	cerr << "Challenge Rejected!\n";
 	return new challenge_response(false);
 }
 
@@ -100,7 +129,7 @@ void client::server_greeting(greeting* greet) {
 }
 
 void client::game_over(game_result* r) {
-	if(r->iwon) {
+	if(!r->iwon) {
 		cerr << "WINNER!\n";
 	} else {
 		cerr << "LOST!!!\n";
@@ -110,16 +139,16 @@ void client::game_over(game_result* r) {
 
 void client::trick_done(move_result* r) {
     // left blank for you
-	if(r->iwon) {
-		++tricks_won;
-	}
+	if(won == 1 || (won == 0 && choice > r->card)) {
+		cerr << "WINNER! with card " << r->card <<"\n";
+	} else if( won == -1 || (won == 0 && choice < r->card)){
+		cerr << "LOST!!! with card " << r->card <<"\n";
+	} else cerr << "TIE!\n";
+	
 }
 
 void client::hand_done(move_result* r) {
     // left blank for you
-	if(r->iwon) {
-		tricks_won = 0;
-	}
 }
 
 int main(void) {
