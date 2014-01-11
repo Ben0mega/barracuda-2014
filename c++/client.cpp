@@ -57,32 +57,33 @@ move_response* client::move(move_request* req) {
     return new play_card_response(choice);
 }
 
-bool highest_num_cards(int num, vector<int>& hand)
+bool highest_num_cards(int num, move_request* req)
 {
+	vector<int> loc_hand(req->state->hand);
+	sort(loc_hand.begin(), loc_hand.end());
+
 	int max = 13;
-	for (int i = hand.size() - 1; i > num; --i) {
-		if (hand[i] < max)
+	for (int i = loc_hand.size() - 1; i > num; --i) {
+		if ((i-1) == num && loc_hand[i] > req->state->card)
+			continue;
+		if (loc_hand[i] < max)
 			return false;
 	}
+	return true;
 }
 
 challenge_response* client::challenge(move_request* req) {
-	auto tricks_won = req->state->your_tricks;
-	if (tricks_won >= 3) {
+	auto& state = req->state;
+	auto tricks_won = state->your_tricks;
+	auto tricks_lost = state->their_tricks;
+	auto tricks_rem = state->hand.size();
+	auto tricks_needed = tricks_lost + tricks_rem - tricks_won;
+
+	if (tricks_needed <= 0) {
 		return new challenge_response(true);
 	}
 
-	sort(req->state->hand.begin(), req->state->hand.end());
-
-	if (tricks_won == 2 && highest_num_cards(1, req->state->hand, )) {
-		return new challenge_response(true);
-	}
-
-	if (tricks_won == 1 && highest_num_cards(2, req->state->hand)) {
-		return new challenge_response(true);
-	}
-
-	if (tricks_won == 0 && highest_num_cards(3, req->state->hand)) {
+	if (highest_num_cards(tricks_needed, req)) {
 		return new challenge_response(true);
 	}
 
@@ -110,16 +111,10 @@ void client::game_over(game_result* r) {
 
 void client::trick_done(move_result* r) {
     // left blank for you
-	if(r->iwon) {
-		++tricks_won;
-	}
 }
 
 void client::hand_done(move_result* r) {
     // left blank for you
-	if(r->iwon) {
-		tricks_won = 0;
-	}
 }
 
 int main(void) {
