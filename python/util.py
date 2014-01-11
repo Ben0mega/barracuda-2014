@@ -20,9 +20,12 @@ def shouldStartChallenge(msg):
     if behind(msg):
        return True 
     if msg["state"]["your_points"] >= 8:
-		cards = sorted(msg["state"]["hand"])
-		index = int(len(cards)/2) + 1
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 or cards[index] > 3:
+		card_count = 0
+		for a in msg["state"]["hand"]:
+			if a > 10:
+				card_count++
+
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 or card_count >= 3:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
