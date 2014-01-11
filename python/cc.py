@@ -24,7 +24,7 @@ class CardCounter:
 
     def probabilityOfHigher(self, card):
         prob = 0
-        for card in {card-1, 12}
+        for card in {card-1, 12}:
             prob += self.probabilityOfCard(card)
         return prob
 
