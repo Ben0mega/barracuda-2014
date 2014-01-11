@@ -14,6 +14,7 @@ def getLeadCard(msg):
 
 def respondToPlay(msg, theirCard):
 # if there is no highest card, it returns the lowest card
+	
 	card = min(msg["state"]["hand"])
 	for a in msg["state"]["hand"]:
 		if card < theirCard and a == theirCard:
