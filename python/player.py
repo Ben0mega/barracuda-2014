@@ -19,9 +19,11 @@ def sample_bot(host, port):
 			print("The server doesn't know your IP. It saw: " + msg["seen_host"])
 			sys.exit(1)
 		elif msg["type"] == "request":
-			if msg["state"]["can_challenge"] == True:
-				s.send({"type": "move", "request_id": msg["request_id"], 
-					"response": {"type": "offer_challenge"}})
+			if msg["state"]["can_challenge"] == True:	# can you challenge?
+				if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
+					if msg["state"]["their_tricks"] - msg["state"]["their_tricks"] < 2:
+						s.send({"type": "move", "request_id": msg["request_id"], 
+							"response": {"type": "offer_challenge"}})
 			if msg["state"]["game_id"] != gameId:
 				gameId = msg["state"]["game_id"]
 				print("New game started: " + str(gameId))
