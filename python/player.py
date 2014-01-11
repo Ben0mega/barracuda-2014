@@ -39,19 +39,6 @@ def playCard(msg, card):
         "response": {"type": "play_card", "card": card}})
 
 
-#ALGORITHM FUNCTIONS
-def shouldChallenge(msg):
-    if msg["state"]["your_points"] >= 8:
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
-            return True
-    if msg["state"]["their_points"] >= 8:
-        return True
-    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
-            return True
-    return False
-
-
 def sample_bot(host, port):
     global s 
     s = SocketLayer(host, port)
