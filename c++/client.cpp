@@ -8,6 +8,9 @@
 
 #include "client.h"
 #include "json_socket/json_socket.h"
+#include <algorithm>
+
+int tricks_won = 0;
 
 void client::error(error_msg* err) {
     cout << "error: " << err->message << endl;
@@ -48,7 +51,34 @@ move_response* client::move(move_request* req) {
     return new play_card_response(choice);
 }
 
+bool highest_num_cards(int num, vector<int>& hand)
+{
+	int max = 13;
+	for (int i = hand.size() - 1; i > num; --i) {
+		if (hand[i] < max)
+			return false;
+	}
+}
+
 challenge_response* client::challenge(move_request* req) {
+	if (tricks_won >= 3) {
+		return new challenge_response(true);
+	}
+
+	sort(req->state->hand.begin(), req->state->hand.end());
+
+	if (tricks_won == 2 && highest_num_cards(1, req->state->hand)) {
+		return new challenge_response(true);
+	}
+
+	if (tricks_won == 1 && highest_num_cards(2, req->state->hand)) {
+		return new challenge_response(true);
+	}
+
+	if (tricks_won == 0 && highest_num_cards(3, req->state->hand)) {
+		return new challenge_response(true);
+	}
+
 	auto value = 0;
 	for(auto card : req->state->hand){
 		value+=card;
@@ -73,10 +103,16 @@ void client::game_over(game_result* r) {
 
 void client::trick_done(move_result* r) {
     // left blank for you
+	if(r->iwon) {
+		++tricks_won;
+	}
 }
 
 void client::hand_done(move_result* r) {
     // left blank for you
+	if(r->iwon) {
+		tricks_won = 0;
+	}
 }
 
 int main(void) {
