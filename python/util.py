@@ -45,7 +45,7 @@ def averageHandValue(msg, min_val):
     return float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= min_val
 
 def neededToWin(msg):
-    return len(msg["state"]["hand"]) - msg["state"]["their_points"]
+    return ceil(len(msg["state"]["hand"]) + msg["state"]["their_points"] + msg["state"]["your_points"] + 1 / 2)
 
 def count_num_card(msg, card_val):
     return len( [ a for a in msg["state"]["hand"] if a >= card_val])
@@ -61,16 +61,22 @@ def shouldStartChallenge(msg, deck):
         return True
      #if aheadByEnoughTricks(msg):
      #    return True
-    if msg["state"]["your_tricks"]+count_num_card(msg, 12) >=3:
+    if msg["state"]["your_tricks"]+count_num_card(msg, 11) >= neededToWin(msg):
          return True
     #when behind, dark shrine
     if behind(msg):
+<<<<<<< HEAD
         if calculateHandScore(msg, deck) > 8:
+=======
+        #TODO: make this a ratio with regards to how far each player is from winning
+        if averageHandValue(msg, 8):
+>>>>>>> 6b852115ed6061f093a1604bafffab4ebf5a520e
            return True 
     
-    if len(msg["state"]["hand"]) == 1:
-        return True
+    #if len(msg["state"]["hand"]) == 1:
+        #return True
 
+<<<<<<< HEAD
     if not isLastCard(msg) and calculateHandScore(msg, deck) > 9.5:
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
@@ -78,14 +84,27 @@ def shouldStartChallenge(msg, deck):
 
     if msg["state"]["your_points"] == 8:
         if calculateHandScore(msg, deck) > 10:
+=======
+    if not isLastCard(msg) and averageHandValue(msg, 9.5):
+        if msg["state"]["their_tricks"] == (neededToWin(msg)-1) and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
+            return False
+        return True
+
+    if (msg["state"]["your_points"] - msg["state"]["their_points"]) > 3:
+        if averageHandValue(msg, 9.7):
+>>>>>>> 6b852115ed6061f093a1604bafffab4ebf5a520e
             return True
     if msg["state"]["your_points"] == 9:
         if calculateHandScore(msg, deck) > 11:
             return True
-    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
-        if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
+    if msg["state"]["their_tricks"] < neededToWin(msg):    # can you win the challenge?
+        if msg["state"]["their_tricks"] == (neededToWin(msg)-1) and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
+<<<<<<< HEAD
         if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
+=======
+        if averageHandValue(msg, 10.2) and msg["state"]["their_tricks"]+count_num_card(msg, 7) < neededToWin(msg):
+>>>>>>> 6b852115ed6061f093a1604bafffab4ebf5a520e
             return True
     return False
 
