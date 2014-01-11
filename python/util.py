@@ -122,22 +122,22 @@ def testTrailCardTautology(msg, theirCard):
         return nextHighest
 
 def testAcceptChallengeTautology(msg):
-	cards = sorted(msg["state"]["hand"])
-	if cards[0] == 13 and cards[-1] == 13:
-		return True
-	if msg["state"]["your_tricks"] == 3:
-		return True
-	if msg["state"]["your_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] < max(msg["state"]["hand"]):
-		return True
-	return False
+    cards = sorted(msg["state"]["hand"])
+    if cards[0] == 13 and cards[-1] == 13:
+        return True
+    if msg["state"]["your_tricks"] == 3:
+        return True
+    if msg["state"]["your_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] < max(msg["state"]["hand"]):
+        return True
+    return False
 
 def testShouldChallengeTautology(msg):
-	cards = sorted(msg["state"]["hand"])
-	if cards[0] == 13 and cards[-1] == 13:
-		return True
-	if msg["state"]["your_tricks"] == 3:
-		return True
-	if msg["state"]["your_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] < max(msg["state"]["hand"]):
-		return True
-	return False
+    cards = sorted(msg["state"]["hand"])
+    if cards[0] == 13 and cards[-1] == 13:
+        return True
+    if msg["state"]["your_tricks"] == 3:
+        return True
+    if msg["state"]["your_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] < max(msg["state"]["hand"]):
+        return True
+    return False
 
