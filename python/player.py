@@ -80,10 +80,10 @@ def sample_bot(host, port):
                 else:
                     rejectChallenge(msg);
         #elif msg["type"] == "result":
-			#if msg["result"]["type"] == "trick_won":
+            #if msg["result"]["type"] == "trick_won":
 
-			#elif msg["result"			
-	
+            #elif msg["result"            
+    
         elif msg["type"] == "greetings_program":
             print("Connected to the server.")
 
