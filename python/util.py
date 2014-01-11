@@ -33,20 +33,24 @@ def shouldStartChallenge(msg):
 
     if opponentAboutToWin(msg):
         return True
-    if aheadByEnoughTricks(msg):
-        return True
+	 #if aheadByEnoughTricks(msg):
+	 #    return True
+    if msg["state"]["your_tricks"]+len( [ a for a in msg["state"]["hand"] if a >= 12]) >=3:
+         return True
     #when behind, dark shrine
     if behind(msg):
        return True 
 
     if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
+        if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
+            return False
         return True
 
     if msg["state"]["your_points"] >= 8:
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
 
@@ -60,14 +64,17 @@ def shouldAcceptChallenge(msg):
         return True
     #when behind, dark shrine
     if behind(msg):
-       return True 
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 8:
+           return True 
+    if msg["state"]["your_tricks"]+len( [ a for a in msg["state"]["hand"] if a >= 12]) >=3:
+         return True
     if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
         return True
     if aheadByEnoughTricks(msg):
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
 
@@ -123,7 +130,7 @@ def testTrailCardTautology(msg, theirCard):
 
 def testAcceptChallengeTautology(msg):
 	cards = sorted(msg["state"]["hand"])
-	if cards[0] == 13 and cards[-1] == 13:
+	if cards[0] == 13 and cards[-1] == 13 and len(cards) + msg["state"]["your_tricks"] >= 3:
 		return True
 	if msg["state"]["your_tricks"] == 3:
 		return True
@@ -133,7 +140,7 @@ def testAcceptChallengeTautology(msg):
 
 def testShouldChallengeTautology(msg):
 	cards = sorted(msg["state"]["hand"])
-	if cards[0] == 13 and cards[-1] == 13:
+	if cards[0] == 13 and cards[-1] == 13 and len(cards) + msg["state"]["your_tricks"] >= 3:
 		return True
 	if msg["state"]["your_tricks"] == 3:
 		return True
