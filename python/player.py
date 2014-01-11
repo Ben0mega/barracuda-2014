@@ -61,6 +61,10 @@ def sample_bot(host, port):
                 deck = CardCounter()
                 print("New game started: " + str(gameId))
             
+			#CHECK SHUFFLE
+            if msg["state"]["hand_id"] % 10 == 0:
+                deck.shuffle()
+
             #SHOULD CHALLENGE
             if shouldStartChallenge(msg, deck) and canChallenge(msg):
                 sendChallenge(msg)    
@@ -68,13 +72,13 @@ def sample_bot(host, port):
             #REQUEST PLAY A CARD
             if msg["request"] == "request_card":
                 #FIRST ROUND
-                if len(msg["state"]["hand"]) == 5:
+                if msg["state"]["hand_id"] == 1:
                     for card in msg["state"]["hand"]:
                         deck.cardRevealed(card)
                 
                 #YOU GO SECOND
                 if "card" in msg["state"].keys():
-                    deck.cardRevealed(msg["state"]["card"])
+                    #deck.cardRevealed(msg["state"]["card"])
                     cardToPlay = respondToPlay(msg, msg["state"]["card"])                      
 
                 #YOU GO FIRST
@@ -93,9 +97,7 @@ def sample_bot(host, port):
                 if msg["result"]["type"] == "trick_won" or msg["result"]["type"] == "trick_lost":
                     deck.cardRevealed(msg["result"]["card"]);
                 elif msg["result"]["type"] == "trick_tied":
-                    deck.cardRevealed(cardToPlay); # defined as the last card you played
-            #elif msg["result"            
-    
+                    deck.cardRevealed(cardToPlay); # defined as the last card you played         
         elif msg["type"] == "greetings_program":
             print("Connected to the server.")
 
