@@ -40,8 +40,13 @@ def playCard(msg, card):
 
 #ALGORITHM FUNCTIONS
 def shouldChallenge(msg):
-	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
+	if msg["state"]["your_points"] >= 8:
 		return True
+	if msg["state"]["their_points"] >= 8:
+		return True
+	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
+			return True
 	return False
 
 
@@ -70,12 +75,12 @@ def sample_bot(host, port):
 			if msg["request"] == "request_card":
 				
 				#YOU GO SECOND
-				if "card" in msg["state"] == True:
-					cardToPlay = getNextHighestCard(msg, msg["state"]["card"])  
+				if "card" in msg["state"].keys():
+					cardToPlay = respondToPlay(msg, msg["state"]["card"])  
 				
 				#YOU GO FIRST
 				else:
-					cardToPlay = getHighestCard(msg)
+					cardToPlay = getLeadCard(msg)
 				playCard(msg, cardToPlay)
 			
 			#THEY CHALLENGE YOU
