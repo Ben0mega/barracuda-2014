@@ -1,3 +1,13 @@
+client
+*.cmake
+*.make
+*.internal
+Makefile
+*.swp
+*.txt
+*.includecache
+*.log
+
 # Compiled Object files
 *.slo
 *.lo

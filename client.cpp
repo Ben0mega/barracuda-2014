@@ -34,11 +34,28 @@ move_response* client::move(move_request* req) {
 			choice = max(choice, card);
 		}
 	}
+	for(auto it = req->state->hand.begin(); it != req->state->hand.end(); ++it){
+		if(*it == choice){
+			req->state->hand.erase(it);
+			break;
+		}
+	}
+	cerr << "Cards: ";
+	for(auto card : req->state->hand){
+		cerr << card << ',';
+	}
+	cerr << endl;
     return new play_card_response(choice);
 }
 
 challenge_response* client::challenge(move_request* req) {
-    return new challenge_response(false);
+	auto value = 0;
+	for(auto card : req->state->hand){
+		value+=card;
+	}
+	if(value*100/req->state->hand.size() > 9)
+		return new challenge_response(true);
+	return new challenge_response(false);
 }
 
 void client::server_greeting(greeting* greet) {
@@ -46,6 +63,11 @@ void client::server_greeting(greeting* greet) {
 }
 
 void client::game_over(game_result* r) {
+	if(r->iwon) {
+		cerr << "WINNER!\n";
+	} else {
+		cerr << "LOST!!!\n";
+	}
     // left blank for you
 }
 
