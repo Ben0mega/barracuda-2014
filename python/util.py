@@ -131,7 +131,7 @@ def shouldAcceptChallenge(msg, deck):
             return False
         if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
             return True
-        if msg["state"]["your_points"] == 9 and calculateHandScore(msg, deck) > 10: #averageHandValue(msg, 9.4):
+        if msg["state"]["your_points"] == 9 and calculateHandScore(msg, deck) > 10.5: #averageHandValue(msg, 9.4):
             return True
     return False
 
