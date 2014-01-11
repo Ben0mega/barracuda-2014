@@ -96,6 +96,8 @@ def shouldAcceptChallenge(msg, deck):
             return False
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
+		if msg["state"]["your_points"] == 9 and float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+			return true
     return False
 
 
