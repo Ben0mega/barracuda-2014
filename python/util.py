@@ -36,8 +36,11 @@ def canTie(msg, theirCard):
 def isLastCard(msg):
     return len(msg["state"]["hand"]) == 1
 
-def averageHandValue(msg):
-    return float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"])
+def averageHandValue(msg, min_val):
+    return float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= min_val
+
+def neededToWin(msg):
+    return  len(msg["state"]["hand"]) - msg["state"]["their_points"]
 
 def shouldStartChallenge(msg, deck):
     if testShouldChallengeTautology(msg):
@@ -54,7 +57,7 @@ def shouldStartChallenge(msg, deck):
          return True
     #when behind, dark shrine
     if behind(msg):
-        if averageHandValue(msg, 9):
+        if averageHandValue(msg, 8):
            return True 
     
     if len(msg["state"]["hand"]) == 1:
