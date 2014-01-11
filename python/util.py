@@ -1,5 +1,8 @@
 #ALGORITHM FUNCTIONS
 def shouldStartChallenge(msg):
+	if msg["state"]["your_points"] - msg["state"]["your_points"] >= 3:
+		return True
+
 	if msg["state"]["your_points"] >= 8:
 		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
 			return True
@@ -42,8 +45,8 @@ def respondToPlay(msg, theirCard):
 		elif a > theirCard:
 			if a < card or card <= theirCard:
 				card = a
-	if (theirCard - min(msg["state"]["hand"])) > 2 and (card - theirCard) > 3  msg["state"]["their_tricks"] < 2:
-		card = min(msg["state"]["hand"]
+	if (theirCard - min(msg["state"]["hand"])) > 2 and (card - theirCard) > 3 and msg["state"]["their_tricks"] < 2:
+		card = min(msg["state"]["hand"])
 	return card
 
 def testLeadCardTautology(msg):
