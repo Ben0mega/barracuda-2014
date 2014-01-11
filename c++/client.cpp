@@ -15,6 +15,14 @@ void client::error(error_msg* err) {
 }
 
 move_response* client::move(move_request* req) {
+	auto value = 0;
+	for(auto card : req->state->hand){
+		value+=card;
+	}
+	if (value > 50 && req->state->can_challenge) {
+		return new offer_challenge();
+	}
+
 	int choice = req->state->hand.front();
 	if(req->state->opp_lead){
 		int opp_card = req->state->card;
