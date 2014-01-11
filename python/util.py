@@ -32,12 +32,8 @@ def shouldStartChallenge(msg):
     if behind(msg):
        return True 
 
-    card_count = 0
-    for a in msg["state"]["hand"]:
-        if a > 10:
-            card_count+=1
-    if card_count >= 3:
-        return True
+	if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
+		return True
 
     if msg["state"]["your_points"] >= 8:
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
