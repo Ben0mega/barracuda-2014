@@ -3,16 +3,16 @@ class CardCounter:
     cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
     
     def __init__(self):
+        self.shuffle()
+
+    def shuffle(self):
         # there are 8 of each type of card
         #                   A  2  3  4  5  6  7  8  9  10 J  Q  K
         self.cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
-        self.total = 104    
-
-    def shuffle(self):
-        __init__(self)
+        self.total = 104 
 
     def cardRevealed(self, card):
-        total -= 1
+        self.total -= 1
         self.cardTallies[card-1] -= 1
         if self.cardTallies[card-1] < 0:
             print("ERROR: " + str(card))
@@ -28,5 +28,5 @@ class CardCounter:
             tally += (value + 1) * self.cardTallies[value]
         if number == 0:
             print("SHIT")        
-        return card - (tally/total)
+        return card - (tally/self.total)
 
