@@ -59,6 +59,8 @@ def shouldStartChallenge(msg, deck):
     if msg["state"]["your_points"] == 8:
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 10.25:
             return True
+	if len(msg["state"]["hand"]) == 1 and "card" in msg["state"].keys() and msg["state"]["your_points"] != 9:
+		return True
     if msg["state"]["your_points"] == 9:
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
             return True
@@ -94,8 +96,6 @@ def shouldAcceptChallenge(msg, deck):
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if len(msg["state"]["hand"]) == 1 and "card" in msg["state"].keys():
-            return True
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 10.25 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
         if msg["state"]["your_points"] == 9 and float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
