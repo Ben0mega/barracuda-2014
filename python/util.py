@@ -63,41 +63,24 @@ def shouldStartChallenge(msg, deck):
         return True
      #if aheadByEnoughTricks(msg):
      #    return True
-    if msg["state"]["your_tricks"]+count_num_card(msg, 11) >= neededToWin(msg):
+    if msg["state"]["your_tricks"]+count_num_card(msg, 10) >= neededToWin(msg):
          return True
     #when behind, dark shrine
     if behind(msg):
-        #TODO: make this a ratio with regards to how far each player is from winning
-        if calculateHandScore(msg, deck) > 8:
-           return True 
+        if msg["state"]["your_tricks"]+count_num_card(msg, 9) >= neededToWin(msg):
+             return True
     
-    #if len(msg["state"]["hand"]) == 1:
-        #return True
-
     if isLastCard(msg):
-        return False
-    if calculateHandScore(msg, deck) > 9.5:
-        if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
-            return False
-        return True
+        if msg["state"]["your_tricks"]+count_num_card(msg, 11) >= neededToWin(msg):
+             return True
 
     if msg["state"]["your_points"] == 9:
         if calculateHandScore(msg, deck) > 10:
                 return True
         
-    if calculateHandScore(msg, deck) > 10:
-        if msg["state"]["their_tricks"] == (neededToWin(msg)-1) and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
-            return False
-        return True
-
     if (msg["state"]["your_points"] - msg["state"]["their_points"]) > neededToWin(msg):
-        if calculateHandScore(msg, deck) > 9.7:
-            return True
-    if msg["state"]["their_tricks"] < neededToWin(msg):    # can you win the challenge?
-        if msg["state"]["their_tricks"] == (neededToWin(msg)-1) and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
-            return False
-        if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < neededToWin(msg):
-            return True
+        if msg["state"]["your_tricks"]+count_num_card(msg, 9) >= neededToWin(msg):
+             return True
     return False
 
 def shouldAcceptChallenge(msg, deck):
