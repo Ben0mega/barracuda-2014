@@ -25,15 +25,6 @@ def shouldStartChallenge(msg):
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
-    if msg["state"]["your_points"] - msg["state"]["your_points"] >= 3:
-        return True
-
-    if msg["state"]["your_points"] >= 8:
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-            return True
-    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-            return True
     return False
 
 def shouldAcceptChallenge(msg):
@@ -45,8 +36,6 @@ def shouldAcceptChallenge(msg):
     if behind(msg):
        return True 
     if aheadByEnoughTricks(msg):
-        return True
-    if msg["state"]["their_points"] > 8:
         return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
