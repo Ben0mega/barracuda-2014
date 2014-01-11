@@ -61,7 +61,7 @@ def sample_bot(host, port):
                 deck = CardCounter()
                 print("New game started: " + str(gameId))
             
-			#CHECK SHUFFLE
+            #CHECK SHUFFLE
             if msg["state"]["hand_id"] % 10 == 0:
                 deck.shuffle()
 

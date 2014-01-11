@@ -12,14 +12,14 @@ class CardCounter:
         __init__(self)
 
     def cardRevealed(self, card):
-		total -= 1
+        total -= 1
         self.cardTallies[card-1] -= 1
         if self.cardTallies[card-1] < 0:
-			print("ERROR: " + str(card))
+            print("ERROR: " + str(card))
 
     def probabilityOfCard(self, card):
         if total == 0:
-        	print("FUCK")
+            print("FUCK")
         return self.cardTallies[card-1]/total
 
     def cardScore(self, card):
