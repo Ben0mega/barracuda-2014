@@ -7,7 +7,11 @@ import json
 import struct
 import time
 import sys
+from util import *
 
+s = 0
+
+#DUMB FUNCTIONS
 def canChallenge(msg):
 	if msg["state"]["can_challenge"] == True:
 		return True
@@ -29,6 +33,12 @@ def rejectChallenge(msg):
 	s.send({"type": "move", "request_id": msg["request_id"],
 		"response": {"type": "reject_challenge"}})
 
+def playCard(msg, card):
+	s.send({"type": "move", "request_id": msg["request_id"],
+		"response": {"type": "play_card", "card": card}})
+
+
+#ALGORITHM FUNCTIONS
 def shouldChallenge(msg):
 	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
 		return True
@@ -36,6 +46,7 @@ def shouldChallenge(msg):
 
 
 def sample_bot(host, port):
+	global s 
 	s = SocketLayer(host, port)
 
 	gameId = None
@@ -46,22 +57,38 @@ def sample_bot(host, port):
 			print("The server doesn't know your IP. It saw: " + msg["seen_host"])
 			sys.exit(1)
 		elif msg["type"] == "request":
-			if shouldChallenge(msg):
-				sendChallenge(msg)	
+			#NEW GAME
 			if msg["state"]["game_id"] != gameId:
 				gameId = msg["state"]["game_id"]
 				print("New game started: " + str(gameId))
+			
+			#SHOULD CHALLENGE
+			if shouldChallenge(msg) and canChallenge(msg):
+				sendChallenge(msg)	
+			
+			#REQUEST PLAY A CARD
 			if msg["request"] == "request_card":
-				cardToPlay = msg["state"]["hand"][0]
-				s.send({"type": "move", "request_id": msg["request_id"],
-					"response": {"type": "play_card", "card": cardToPlay}})
+				
+				#YOU GO SECOND
+				if "card" in msg["state"] == True:
+					cardToPlay = getNextHighestCard(msg, msg["state"]["card"])  
+				
+				#YOU GO FIRST
+				else:
+					cardToPlay = getHighestCard(msg)
+				playCard(msg, cardToPlay)
+			
+			#THEY CHALLENGE YOU
 			elif msg["request"] == "challenge_offered":
 				if shouldChallenge(msg):
-					acceptChallenge();
+					acceptChallenge(msg);
 				else:
-					rejectChallenge();
+					rejectChallenge(msg);
+		
 		elif msg["type"] == "greetings_program":
 			print("Connected to the server.")
+
+		elif msg["type"] == "":
 
 def loop(player, *args):
     while True:
