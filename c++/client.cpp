@@ -10,8 +10,6 @@
 #include "json_socket/json_socket.h"
 #include <algorithm>
 
-int tricks_won = 0;
-
 void client::error(error_msg* err) {
     cout << "error: " << err->message << endl;
 }
@@ -61,13 +59,14 @@ bool highest_num_cards(int num, vector<int>& hand)
 }
 
 challenge_response* client::challenge(move_request* req) {
+	auto tricks_won = req->state->your_tricks;
 	if (tricks_won >= 3) {
 		return new challenge_response(true);
 	}
 
 	sort(req->state->hand.begin(), req->state->hand.end());
 
-	if (tricks_won == 2 && highest_num_cards(1, req->state->hand)) {
+	if (tricks_won == 2 && highest_num_cards(1, req->state->hand, )) {
 		return new challenge_response(true);
 	}
 
