@@ -62,7 +62,7 @@ def sample_bot(host, port):
                 print("New game started: " + str(gameId))
             
             #CHECK SHUFFLE
-            if msg["state"]["hand_id"] % 10 == 0:
+            if msg["state"]["hand_id"] % 10 == 1:
                 deck.shuffle()
 
             #SHOULD CHALLENGE
@@ -78,7 +78,7 @@ def sample_bot(host, port):
                 
                 #YOU GO SECOND
                 if "card" in msg["state"].keys():
-                    #deck.cardRevealed(msg["state"]["card"])
+                    deck.cardRevealed(msg["state"]["card"])
                     cardToPlay = respondToPlay(msg, msg["state"]["card"])                      
 
                 #YOU GO FIRST
