@@ -1,10 +1,24 @@
+#ALGORITHM FUNCTIONS
+def shouldStartChallenge(msg):
+	if msg["state"]["your_points"] >= 8:
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+			return True
+	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+			return True
+	return False
+
+def shouldAcceptChallenge(msg):
+	if msg["state"]["their_points"] >= 8:
+		return True
+	return False
+
 def getNextHighestCard(msg, theirCard):
 	card = min(msg["state"]["hand"])
 	for a in msg["state"]["hand"]:
 		if a < card or card <= theirCard:
 			card = a
 	return card
-
 
 def getLeadCard(msg):
 	cards = sorted(msg["state"]["hand"])
@@ -27,11 +41,8 @@ def respondToPlay(msg, theirCard):
 def testLeadCardTautology(msg):
 	if msg["state"]["your_tricks"] == 2:
 		return max(msg["state"]["hand"])
-	
 
 def testTrailCardTautology(msg, theirCard):
 	nextHighest = getNextHighestCard(msg, theirCard)
 	if nextHighest - theirCard == 1:
 		return nextHighest
-
-

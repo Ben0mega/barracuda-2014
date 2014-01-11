@@ -41,7 +41,8 @@ def playCard(msg, card):
 #ALGORITHM FUNCTIONS
 def shouldChallenge(msg):
 	if msg["state"]["your_points"] >= 8:
-		return True
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
+			return True
 	if msg["state"]["their_points"] >= 8:
 		return True
 	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
@@ -68,7 +69,7 @@ def sample_bot(host, port):
 				print("New game started: " + str(gameId))
 			
 			#SHOULD CHALLENGE
-			if shouldChallenge(msg) and canChallenge(msg):
+			if shouldStartChallenge(msg) and canChallenge(msg):
 				sendChallenge(msg)	
 			
 			#REQUEST PLAY A CARD
@@ -85,7 +86,7 @@ def sample_bot(host, port):
 			
 			#THEY CHALLENGE YOU
 			elif msg["request"] == "challenge_offered":
-				if shouldChallenge(msg):
+				if shouldAcceptChallenge(msg):
 					acceptChallenge(msg);
 				else:
 					rejectChallenge(msg);
