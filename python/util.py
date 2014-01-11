@@ -37,8 +37,8 @@ def shouldStartChallenge(msg, deck):
     if testShouldChallengeTautology(msg):
          return True
 
-    if calculateHandScore(msg, deck) > 0.5:
-        return True
+	 #if calculateHandScore(msg, deck) > 0.5:
+	 #    return True
 
     if opponentAboutToWin(msg):
         return True
@@ -72,8 +72,8 @@ def shouldAcceptChallenge(msg, deck):
     if testAcceptChallengeTautology(msg):
         return True
 
-    if calculateHandScore(msg, deck) > 0.5:
-        return True
+	 #if calculateHandScore(msg, deck) > 0.5:
+	 #    return True
     
     if ahead(msg):
         return False
