@@ -41,6 +41,8 @@ def respondToPlay(msg, theirCard):
 		elif a > theirCard:
 			if a < card or card <= theirCard:
 				card = a
+	if (theirCard - min(msg["state"]["hand"])) > 2 and (card - theirCard) > 3  msg["state"]["their_tricks"] < 2:
+		card = min(msg["state"]["hand"]
 	return card
 
 def testLeadCardTautology(msg):
