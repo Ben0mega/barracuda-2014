@@ -91,34 +91,31 @@ move_response* client::move(move_request* req) {
     return new play_card_response(choice);
 }
 
-bool highest_num_cards(int num, vector<int>& hand)
+bool highest_num_cards(int num, move_request* req)
 {
+	vector<int> &loc_hand=req->state->hand;
+
 	int max = 13;
 	int count = 0;
-	for(auto c : hand){
+	for(auto c : loc_hand){
 		if(c == max) count++;
 	}
 	return count == num;
 }
 
 challenge_response* client::challenge(move_request* req) {
-	auto tricks_won = req->state->your_tricks;
-	if (tricks_won >= 3) {
+	auto& state = req->state;
+	auto tricks_won = state->your_tricks;
+	auto tricks_lost = state->their_tricks;
+	auto tricks_rem = state->hand.size();
+	auto tricks_needed = tricks_lost + tricks_rem - tricks_won;
+
+	if (tricks_needed <= 0) {
 		cerr << "Challenge Accepted!\n";
 		return new challenge_response(true);
 	}
 
-	if (tricks_won == 2 && highest_num_cards(1, req->state->hand )) {
-		cerr << "Challenge Accepted!\n";
-		return new challenge_response(true);
-	}
-
-	if (tricks_won == 1 && highest_num_cards(2, req->state->hand)) {
-		cerr << "Challenge Accepted!\n";
-		return new challenge_response(true);
-	}
-
-	if (tricks_won == 0 && highest_num_cards(3, req->state->hand)) {
+	if (highest_num_cards(tricks_needed, req)) {
 		cerr << "Challenge Accepted!\n";
 		return new challenge_response(true);
 	}
