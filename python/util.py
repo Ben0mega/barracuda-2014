@@ -48,7 +48,8 @@ def shouldStartChallenge(msg, deck):
          return True
     #when behind, dark shrine
     if behind(msg):
-       return True 
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
+           return True 
 
     if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5:
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
