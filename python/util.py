@@ -1,3 +1,5 @@
+import math
+
 #ALGORITHM FUNCTIONS
 def aheadByEnoughTricks(msg):
     return msg["state"]["your_tricks"] - msg["state"]["their_tricks"]  >= 1
