@@ -13,86 +13,86 @@ s = 0
 
 #DUMB FUNCTIONS
 def canChallenge(msg):
-	if msg["state"]["can_challenge"] == True:
-		return True
-	return False
+    if msg["state"]["can_challenge"] == True:
+        return True
+    return False
 
 def sendChallenge(msg):
-	if canChallenge(msg):
-		s.send({"type": "move", "request_id": msg["request_id"], 
-			"response": {"type": "offer_challenge"}})
-	else:
-		print("ERROR: can't actually send the challenge, stupid")
-		exit(1)
+    if canChallenge(msg):
+        s.send({"type": "move", "request_id": msg["request_id"], 
+            "response": {"type": "offer_challenge"}})
+    else:
+        print("ERROR: can't actually send the challenge, stupid")
+        exit(1)
 
 def acceptChallenge(msg):
-	s.send({"type": "move", "request_id": msg["request_id"],
-		"response": {"type": "accept_challenge"}})
+    s.send({"type": "move", "request_id": msg["request_id"],
+        "response": {"type": "accept_challenge"}})
 
 def rejectChallenge(msg):
-	s.send({"type": "move", "request_id": msg["request_id"],
-		"response": {"type": "reject_challenge"}})
+    s.send({"type": "move", "request_id": msg["request_id"],
+        "response": {"type": "reject_challenge"}})
 
 def playCard(msg, card):
-	s.send({"type": "move", "request_id": msg["request_id"],
-		"response": {"type": "play_card", "card": card}})
+    s.send({"type": "move", "request_id": msg["request_id"],
+        "response": {"type": "play_card", "card": card}})
 
 
 #ALGORITHM FUNCTIONS
 def shouldChallenge(msg):
-	if msg["state"]["your_points"] >= 8:
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
-			return True
-	if msg["state"]["their_points"] >= 8:
-		return True
-	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
-			return True
-	return False
+    if msg["state"]["your_points"] >= 8:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
+            return True
+    if msg["state"]["their_points"] >= 8:
+        return True
+    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
+            return True
+    return False
 
 
 def sample_bot(host, port):
-	global s 
-	s = SocketLayer(host, port)
+    global s 
+    s = SocketLayer(host, port)
 
-	gameId = None
+    gameId = None
 
-	while True:
-		msg = s.pump()
-		if msg["type"] == "error":
-			print("The server doesn't know your IP. It saw: " + msg["seen_host"])
-			sys.exit(1)
-		elif msg["type"] == "request":
-			#NEW GAME
-			if msg["state"]["game_id"] != gameId:
-				gameId = msg["state"]["game_id"]
-				print("New game started: " + str(gameId))
-			
-			#SHOULD CHALLENGE
-			if shouldStartChallenge(msg) and canChallenge(msg):
-				sendChallenge(msg)	
-			
-			#REQUEST PLAY A CARD
-			if msg["request"] == "request_card":
-				
-				#YOU GO SECOND
-				if "card" in msg["state"].keys():
-					cardToPlay = respondToPlay(msg, msg["state"]["card"])  
-				
-				#YOU GO FIRST
-				else:
-					cardToPlay = getLeadCard(msg)
-				playCard(msg, cardToPlay)
-			
-			#THEY CHALLENGE YOU
-			elif msg["request"] == "challenge_offered":
-				if shouldAcceptChallenge(msg):
-					acceptChallenge(msg);
-				else:
-					rejectChallenge(msg);
-		
-		elif msg["type"] == "greetings_program":
-			print("Connected to the server.")
+    while True:
+        msg = s.pump()
+        if msg["type"] == "error":
+            print("The server doesn't know your IP. It saw: " + msg["seen_host"])
+            sys.exit(1)
+        elif msg["type"] == "request":
+            #NEW GAME
+            if msg["state"]["game_id"] != gameId:
+                gameId = msg["state"]["game_id"]
+                print("New game started: " + str(gameId))
+            
+            #SHOULD CHALLENGE
+            if shouldStartChallenge(msg) and canChallenge(msg):
+                sendChallenge(msg)    
+            
+            #REQUEST PLAY A CARD
+            if msg["request"] == "request_card":
+                
+                #YOU GO SECOND
+                if "card" in msg["state"].keys():
+                    cardToPlay = respondToPlay(msg, msg["state"]["card"])  
+                
+                #YOU GO FIRST
+                else:
+                    cardToPlay = getLeadCard(msg)
+                playCard(msg, cardToPlay)
+            
+            #THEY CHALLENGE YOU
+            elif msg["request"] == "challenge_offered":
+                if shouldAcceptChallenge(msg):
+                    acceptChallenge(msg);
+                else:
+                    rejectChallenge(msg);
+        
+        elif msg["type"] == "greetings_program":
+            print("Connected to the server.")
 
 def loop(player, *args):
     while True:
