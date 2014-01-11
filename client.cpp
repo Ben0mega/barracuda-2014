@@ -14,7 +14,27 @@ void client::error(error_msg* err) {
 }
 
 move_response* client::move(move_request* req) {
-    return new play_card_response(req->state->hand[0]);
+	int choice = req->state->hand.front();
+	if(req->state->opp_lead){
+		int opp_card = req->state->card;
+		for(auto card : req->state->hand){
+			// if our card wins
+			if(card > opp_card){
+				//if our current choice loses...
+				if(choice < opp_card) choice = card;
+				//if our current choice wins, but is higher than card
+				else choice = min(choice,card);
+			} else if(card < opp_card){
+				if(choice > opp_card) continue;
+				choice = min(choice, card);
+			}
+		}
+	} else {
+		for(auto card : req->state->hand){
+			choice = max(choice, card);
+		}
+	}
+    return new play_card_response(choice);
 }
 
 challenge_response* client::challenge(move_request* req) {
