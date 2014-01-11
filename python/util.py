@@ -25,7 +25,7 @@ def canTie(msg, theirCard):
 
 def shouldStartChallenge(msg):
     if testShouldChallengeTautology(msg):
-	     return True
+         return True
 
     if opponentAboutToWin(msg):
         return True
@@ -112,14 +112,14 @@ def testTrailCardTautology(msg, theirCard):
         return nextHighest
 
 def testAcceptChallengeTautology(msg):
-	cards = sorted(msg["state"]["hand"])
-	if cards[0] == 13 and cards[-1] == 13:
-		return True
-	return False
+    cards = sorted(msg["state"]["hand"])
+    if cards[0] == 13 and cards[-1] == 13:
+        return True
+    return False
 
 def testShouldChallengeTautology(msg):
-	cards = sorted(msg["state"]["hand"])
-	if cards[0] == 13 and cards[-1] == 13:
-		return True
-	return False
+    cards = sorted(msg["state"]["hand"])
+    if cards[0] == 13 and cards[-1] == 13:
+        return True
+    return False
 
