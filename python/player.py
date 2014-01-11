@@ -8,6 +8,12 @@ import struct
 import time
 import sys
 
+def shouldChallenge(msg):
+	if msg["state"]["their_tricks"] < 3:									# can you win the challenge?
+		if msg["state"]["their_tricks"] - msg["state"]["their_tricks"] < 3: # are you ahead enough
+			return True
+	return False
+
 def sample_bot(host, port):
 	s = SocketLayer(host, port)
 
@@ -20,10 +26,9 @@ def sample_bot(host, port):
 			sys.exit(1)
 		elif msg["type"] == "request":
 			if msg["state"]["can_challenge"] == True:	# can you challenge?
-				if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
-					if msg["state"]["their_tricks"] - msg["state"]["their_tricks"] < 2:
-						s.send({"type": "move", "request_id": msg["request_id"], 
-							"response": {"type": "offer_challenge"}})
+				if shouldChallenge(msg):
+					s.send({"type": "move", "request_id": msg["request_id"], 
+						"response": {"type": "offer_challenge"}})
 			if msg["state"]["game_id"] != gameId:
 				gameId = msg["state"]["game_id"]
 				print("New game started: " + str(gameId))
@@ -32,8 +37,9 @@ def sample_bot(host, port):
 				s.send({"type": "move", "request_id": msg["request_id"],
 					"response": {"type": "play_card", "card": cardToPlay}})
 			elif msg["request"] == "challenge_offered":
-				s.send({"type": "move", "request_id": msg["request_id"],
-					"response": {"type": "accept_challenge"}})
+				if shouldChallenge(msg):
+					s.send({"type": "move", "request_id": msg["request_id"],
+						"response": {"type": "accept_challenge"}})
 				#s.send({"type": "move", "request_id": msg["request_id"],
                 #        "response": {"type": "reject_challenge"}})
 		elif msg["type"] == "greetings_program":
