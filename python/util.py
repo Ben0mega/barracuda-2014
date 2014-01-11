@@ -50,18 +50,21 @@ def shouldStartChallenge(msg, deck):
     if behind(msg):
        return True 
 
-    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
+    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5:
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
         return True
 
-    if msg["state"]["your_points"] >= 8:
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+    if msg["state"]["your_points"] == 8:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5:
+            return True
+    if msg["state"]["your_points"] == 9:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
 
@@ -78,19 +81,19 @@ def shouldAcceptChallenge(msg, deck):
         return True
     #when behind, dark shrine
     if behind(msg):
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 8:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
            return True 
     if msg["state"]["your_tricks"]+len( [ a for a in msg["state"]["hand"] if a >= 12]) >=3:
          return True
-    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5:
         return True
     if aheadByEnoughTricks(msg):
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 10.5 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
 
