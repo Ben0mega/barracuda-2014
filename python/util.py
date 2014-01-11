@@ -12,11 +12,15 @@ def opponentAboutToWin(msg):
     return msg["state"]["their_points"] == 9
 
 def getNextHighestCard(msg, theirCard):
-    card = min(msg["state"]["hand"])
+#Returns the min card when there is no next highest    
+    minCard = min(msg["state"]["hand"])
+    bestCard = max(msg["state"]["hand"])
     for a in msg["state"]["hand"]:
-        if a < card and a > theirCard:
-            card = a
-    return card
+        if a < bestCard and a > theirCard:
+            bestCard = a
+	if bestCard < theirCard:
+		return minCard    
+	return bestCard
 
 def canTie(msg, theirCard):
     if theirCard in msg["state"]["hand"]:    
