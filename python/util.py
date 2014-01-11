@@ -94,8 +94,8 @@ def respondToPlay(msg, theirCard):
     if tautology != None:
         return tautology
     
-	if canTie(msg, theirCard):
-		return theirCard
+	#if canTie(msg, theirCard):
+		#return theirCard
 
     card = min(msg["state"]["hand"])
     if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
