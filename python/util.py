@@ -36,10 +36,13 @@ def shouldStartChallenge(msg):
     return False
 
 def shouldAcceptChallenge(msg):
-    if ahead(msg):
-        return False
-    if opponentAboutToWin(msg):
-        return True
+	tautology = shouldAcceptChallengeTautology()
+	if tautology != None:
+		return tautology
+	if ahead(msg):
+		return False
+	if opponentAboutToWin(msg):
+		return True
     #when behind, dark shrine
     if behind(msg):
        return True 
@@ -95,3 +98,10 @@ def testTrailCardTautology(msg, theirCard):
     nextHighest = getNextHighestCard(msg, theirCard)
     if nextHighest - theirCard == 1:
         return nextHighest
+
+def testAcceptChallengeTautology(msg, theirCard):
+	return None
+
+def testShouldChallengeTautology(msg, theirCard):
+	return None
+
