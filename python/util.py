@@ -74,7 +74,9 @@ def shouldStartChallenge(msg, deck):
     #if len(msg["state"]["hand"]) == 1:
         #return True
 
-    if not isLastCard(msg) and calculateHandScore(msg, deck) > 9.5:
+	if isLastCard(msg):
+		return False
+    if calculateHandScore(msg, deck) > 9.5:
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
         return True
@@ -83,7 +85,7 @@ def shouldStartChallenge(msg, deck):
         if calculateHandScore(msg, deck) > 10:
                 return True
         
-    if not isLastCard(msg) and calculateHandScore(msg, deck) > 10:
+    if calculateHandScore(msg, deck) > 10:
         if msg["state"]["their_tricks"] == (neededToWin(msg)-1) and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
         return True
@@ -117,15 +119,17 @@ def shouldAcceptChallenge(msg, deck):
          return True
     if calculateHandScore(msg, deck) > 10.2 and len(msg["state"]["hand"]) > 1:
         return True
+	if isLastCard(msg):
+		return False
     if aheadByEnoughTricks(msg):
-        if not isLastCard(msg) and calculateHandScore(msg, deck) > 11: #averageHandValue(msg, 11):
+        if calculateHandScore(msg, deck) > 11: #averageHandValue(msg, 11):
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
         if calculateHandScore(msg, deck) > 10.2 and msg["state"]["their_tricks"]+count_num_card(msg, 7) < 3:
             return True
-        if not isLastCard(msg) and msg["state"]["your_points"] == 9 and calculateHandScore(msg, deck) > 9.4: #averageHandValue(msg, 9.4):
+        if msg["state"]["your_points"] == 9 and calculateHandScore(msg, deck) > 9.4: #averageHandValue(msg, 9.4):
             return True
     return False
 
