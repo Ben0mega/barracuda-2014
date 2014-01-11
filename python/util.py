@@ -1,3 +1,11 @@
+def getNextHighestCard(msg, theirCard):
+	card = min(msg["state"]["hand"])
+	for a in msg["state"]["hand"]:
+		if a < card or card <= theirCard:
+			card = a
+	return card
+
+
 def getLeadCard(msg):
 	cards = sorted(msg["state"]["hand"])
 	index = int(len(cards)/2)
@@ -15,23 +23,14 @@ def respondToPlay(msg, theirCard):
 				card = a
 	return card
 
-class CardCounter:
-	cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
+def testLeadCardTautology(msg):
+	if msg["state"]["your_tricks"] == 2:
+		return max(msg["state"]["hand"])
 	
-	def __init__():
-		# there are 8 of each type of card
-		#			   A  2  3  4  5  6  7  8  9  10 J  Q  K
-		cardTallies = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
-	
-	def shuffle():
-		__init__()
 
-	def cardRevealed(card):
-		cardTallies[card] = cardTallies[card] - 1
+def testTrailCardTautology(msg, theirCard):
+	nextHighest = getNextHighestCard(msg, theirCard)
+	if nextHighest - theirCard == 1:
+		return nextHighest
 
-	def probabilityOfCard(card):
-		total = 0
-		for tally in cardTallies:
-			total += tally
-		return cardTallies[card]/total
 
