@@ -23,7 +23,7 @@ def shouldStartChallenge(msg):
 		cards = sorted(msg["state"]["hand"])
 		index = int(len(cards)/2) + 1
 		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 or cards[index] > 3:
-            return True
+			return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
@@ -52,18 +52,26 @@ def getNextHighestCard(msg, theirCard):
     return card
 
 def getLeadCard(msg):
-    cards = sorted(msg["state"]["hand"])
-    index = int(len(cards)/2)
-    card = cards[index];
-    return card
+	tautology = testLeadCardTautology(msg)
+	if tautology != None:
+		return tautology
+	
+	cards = sorted(msg["state"]["hand"])
+	index = int(len(cards)/2)
+	card = cards[index];
+	return card
 
 def respondToPlay(msg, theirCard):
 # if there is no highest card, it returns the lowest card
-    card = min(msg["state"]["hand"])
-    if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
-        return card
+	tautology = testTrailCardTautology(msg, theirCard) 
+	if tautology != None:
+		return tautology
+	
+	card = min(msg["state"]["hand"])
+	if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
+		return card
 
-    for a in msg["state"]["hand"]:
+	for a in msg["state"]["hand"]:
         if card < theirCard and a == theirCard:
             card = theirCard
         elif a > theirCard:
