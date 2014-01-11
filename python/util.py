@@ -25,16 +25,16 @@ def shouldStartChallenge(msg):
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
-	if msg["state"]["your_points"] - msg["state"]["your_points"] >= 3:
-		return True
+    if msg["state"]["your_points"] - msg["state"]["your_points"] >= 3:
+        return True
 
-	if msg["state"]["your_points"] >= 8:
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-			return True
-	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-			return True
-	return False
+    if msg["state"]["your_points"] >= 8:
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+            return True
+    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+            return True
+    return False
 
 def shouldAcceptChallenge(msg):
     if ahead(msg):
@@ -46,12 +46,12 @@ def shouldAcceptChallenge(msg):
        return True 
     if aheadByEnoughTricks(msg):
         return True
-	if msg["state"]["their_points"] > 8:
-		return True
-	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-			return True
-	return False
+    if msg["state"]["their_points"] > 8:
+        return True
+    if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+            return True
+    return False
 
 def getNextHighestCard(msg, theirCard):
     card = min(msg["state"]["hand"])
@@ -68,19 +68,19 @@ def getLeadCard(msg):
 
 def respondToPlay(msg, theirCard):
 # if there is no highest card, it returns the lowest card
-	card = min(msg["state"]["hand"])
-	if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
-		return card
+    card = min(msg["state"]["hand"])
+    if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
+        return card
 
-	for a in msg["state"]["hand"]:
-		if card < theirCard and a == theirCard:
-			card = theirCard
-		elif a > theirCard:
-			if a < card or card <= theirCard:
-				card = a
-	if (theirCard - min(msg["state"]["hand"])) > 2 and (card - theirCard) > 3 and msg["state"]["their_tricks"] < 2:
-		card = min(msg["state"]["hand"])
-	return card
+    for a in msg["state"]["hand"]:
+        if card < theirCard and a == theirCard:
+            card = theirCard
+        elif a > theirCard:
+            if a < card or card <= theirCard:
+                card = a
+    if (theirCard - min(msg["state"]["hand"])) > 2 and (card - theirCard) > 3 and msg["state"]["their_tricks"] < 2:
+        card = min(msg["state"]["hand"])
+    return card
 
 def testLeadCardTautology(msg):
     if msg["state"]["your_tricks"] == 2:

@@ -53,48 +53,48 @@ def shouldChallenge(msg):
 
 
 def sample_bot(host, port):
-	global s 
-	s = SocketLayer(host, port)
+    global s 
+    s = SocketLayer(host, port)
 
-	gameId = None
+    gameId = None
 
-	while True:
-		msg = s.pump()
-		if msg["type"] == "error":
-			print("The server doesn't know your IP. It saw: " + msg["seen_host"])
-			sys.exit(1)
-		elif msg["type"] == "request":
-			#NEW GAME
-			if msg["state"]["game_id"] != gameId:
-				gameId = msg["state"]["game_id"]
-				deck = CardCounter()
-				print("New game started: " + str(gameId))
-			
-			#SHOULD CHALLENGE
-			if shouldStartChallenge(msg) and canChallenge(msg):
-				sendChallenge(msg)	
-			
-			#REQUEST PLAY A CARD
-			if msg["request"] == "request_card":
-				
-				#YOU GO SECOND
-				if "card" in msg["state"].keys():
-					cardToPlay = respondToPlay(msg, msg["state"]["card"])  
+    while True:
+        msg = s.pump()
+        if msg["type"] == "error":
+            print("The server doesn't know your IP. It saw: " + msg["seen_host"])
+            sys.exit(1)
+        elif msg["type"] == "request":
+            #NEW GAME
+            if msg["state"]["game_id"] != gameId:
+                gameId = msg["state"]["game_id"]
+                deck = CardCounter()
+                print("New game started: " + str(gameId))
+            
+            #SHOULD CHALLENGE
+            if shouldStartChallenge(msg) and canChallenge(msg):
+                sendChallenge(msg)    
+            
+            #REQUEST PLAY A CARD
+            if msg["request"] == "request_card":
+                
+                #YOU GO SECOND
+                if "card" in msg["state"].keys():
+                    cardToPlay = respondToPlay(msg, msg["state"]["card"])  
 
-				#YOU GO FIRST
-				else:
-					cardToPlay = getLeadCard(msg)
-				playCard(msg, cardToPlay)
-			
-			#THEY CHALLENGE YOU
-			elif msg["request"] == "challenge_offered":
-				if shouldAcceptChallenge(msg):
-					acceptChallenge(msg);
-				else:
-					rejectChallenge(msg);
-		
-		elif msg["type"] == "greetings_program":
-			print("Connected to the server.")
+                #YOU GO FIRST
+                else:
+                    cardToPlay = getLeadCard(msg)
+                playCard(msg, cardToPlay)
+            
+            #THEY CHALLENGE YOU
+            elif msg["request"] == "challenge_offered":
+                if shouldAcceptChallenge(msg):
+                    acceptChallenge(msg);
+                else:
+                    rejectChallenge(msg);
+        
+        elif msg["type"] == "greetings_program":
+            print("Connected to the server.")
 
 def loop(player, *args):
     while True:
