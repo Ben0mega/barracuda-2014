@@ -66,7 +66,7 @@ def shouldStartChallenge(msg, deck):
     #when behind, dark shrine
     if behind(msg):
 <<<<<<< HEAD
-		#TODO: make this a ratio with regards to how far each player is from winning
+        #TODO: make this a ratio with regards to how far each player is from winning
         if calculateHandScore(msg, 8):
 =======
         #TODO: make this a ratio with regards to how far each player is from winning
