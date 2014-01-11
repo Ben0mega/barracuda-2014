@@ -59,10 +59,10 @@ def getNextHighestCard(msg, theirCard):
 
 def getLeadCard(msg):
     tautology = testLeadCardTautology(msg)
-	if tautology != None:
-		return tautology
-	
-	cards = sorted(msg["state"]["hand"])
+    if tautology != None:
+        return tautology
+    
+    cards = sorted(msg["state"]["hand"])
     index = int(len(cards)/2)
     card = cards[index];
     return card
@@ -70,10 +70,10 @@ def getLeadCard(msg):
 def respondToPlay(msg, theirCard):
 # if there is no highest card, it returns the lowest card
     tautology = testTrailCardTautology(msg, theirCard)
-	if tautology != None:
-		return tautology
-	
-	card = min(msg["state"]["hand"])
+    if tautology != None:
+        return tautology
+    
+    card = min(msg["state"]["hand"])
     if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
         return card
 
