@@ -117,8 +117,8 @@ def shouldAcceptChallenge(msg, deck):
            return True 
     if msg["state"]["your_tricks"]+count_num_card(msg, 11) >=neededToWin(msg):
          return True
-	if msg["state"]["your_points"] == 9 and count_num_card(msg, 11) > 2:
-		return True
+    if msg["state"]["your_points"] == 9 and count_num_card(msg, 11) >= 2:
+        return True
     if isLastCard(msg):
         return False
     return False
