@@ -1,3 +1,18 @@
+#ALGORITHM FUNCTIONS
+def shouldStartChallenge(msg):
+	if msg["state"]["your_points"] >= 8:
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+			return True
+	if msg["state"]["their_tricks"] < 3:	# can you win the challenge?
+		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+			return True
+	return False
+
+def shouldAcceptChallenge(msg):
+	if msg["state"]["their_points"] >= 8:
+		return True
+	return False
+
 def getLeadCard(msg):
 	cards = sorted(msg["state"]["hand"])
 	index = int(len(cards)/2)
