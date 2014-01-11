@@ -50,6 +50,8 @@ def shouldStartChallenge(msg):
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
+        if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
+            return False
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
@@ -74,6 +76,8 @@ def shouldAcceptChallenge(msg):
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
+        if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
+            return False
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
