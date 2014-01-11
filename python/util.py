@@ -36,6 +36,9 @@ def canTie(msg, theirCard):
 def isLastCard(msg):
     return len(msg["state"]["hand"]) == 1
 
+def averageHandValue(msg):
+    return float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"])
+
 def shouldStartChallenge(msg, deck):
     if testShouldChallengeTautology(msg):
          return True
@@ -51,27 +54,27 @@ def shouldStartChallenge(msg, deck):
          return True
     #when behind, dark shrine
     if behind(msg):
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9:
+        if averageHandValue(msg, 9):
            return True 
     
     if len(msg["state"]["hand"]) == 1:
         return True
 
-    if not isLastCard(msg) and float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 9.5:
+    if not isLastCard(msg) and averageHandValue(msg, 9.5):
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
         return True
 
     if msg["state"]["your_points"] == 8:
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 10:
+        if averageHandValue(msg, 10):
             return True
     if msg["state"]["your_points"] == 9:
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
+        if averageHandValue(msg, 11):
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 10.2 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
+        if averageHandValue(msg, 10.2) and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
     return False
 
@@ -88,21 +91,21 @@ def shouldAcceptChallenge(msg, deck):
         return True
     #when behind, dark shrine
     if behind(msg):
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        if averageHandValue(msg, 9.4):
            return True 
     if msg["state"]["your_tricks"]+len( [ a for a in msg["state"]["hand"] if a >= 12]) >=3:
          return True
-    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 10.2 and len(msg["state"]["hand"]) > 1:
+    if averageHandValue(msg, 10.2) and len(msg["state"]["hand"]) > 1:
         return True
     if aheadByEnoughTricks(msg):
-        if not isLastCard(msg) and float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 11:
+        if not isLastCard(msg) and averageHandValue(msg, 11):
             return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if msg["state"]["their_tricks"] == 2 and "card" in msg["state"].keys() and msg["state"]["card"] > max(msg["state"]["hand"]):
             return False
-        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) >= 10.2 and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
+        if averageHandValue(msg, 10.2) and msg["state"]["their_tricks"]+len( [ a for a in msg["state"]["hand"] if a <= 7]) < 3:
             return True
-        if not isLastCard(msg) and msg["state"]["your_points"] == 9 and float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        if not isLastCard(msg) and msg["state"]["your_points"] == 9 and averageHandValue(msg, 9.4):
             return True
     return False
 
