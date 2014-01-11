@@ -9,29 +9,33 @@ import time
 import sys
 
 def sample_bot(host, port):
-    s = SocketLayer(host, port)
+	s = SocketLayer(host, port)
 
-    gameId = None
+	gameId = None
 
-    while True:
-        msg = s.pump()
-        if msg["type"] == "error":
-            print("The server doesn't know your IP. It saw: " + msg["seen_host"])
-            sys.exit(1)
-        elif msg["type"] == "request":
-            if msg["state"]["game_id"] != gameId:
-                gameId = msg["state"]["game_id"]
-                print("New game started: " + str(gameId))
-            if msg["request"] == "request_card":
-                cardToPlay = msg["state"]["hand"][0]
-                s.send({"type": "move", "request_id": msg["request_id"],
-                    "response": {"type": "play_card", "card": cardToPlay}})
-                print("Played: " + str(cardToPlay))
-            elif msg["request"] == "challenge_offered":
-                s.send({"type": "move", "request_id": msg["request_id"],
-                        "response": {"type": "reject_challenge"}})
-        elif msg["type"] == "greetings_program":
-            print("Connected to the server.")
+	while True:
+		msg = s.pump()
+		if msg["type"] == "error":
+			print("The server doesn't know your IP. It saw: " + msg["seen_host"])
+			sys.exit(1)
+		elif msg["type"] == "request":
+			if msg["state"]["can_challenge"] == True:
+				s.send({"type": "move", "request_id": msg["request_id"], 
+					"response": {"type": "offer_challenge"}})
+			if msg["state"]["game_id"] != gameId:
+				gameId = msg["state"]["game_id"]
+				print("New game started: " + str(gameId))
+			if msg["request"] == "request_card":
+				cardToPlay = msg["state"]["hand"][0]
+				s.send({"type": "move", "request_id": msg["request_id"],
+					"response": {"type": "play_card", "card": cardToPlay}})
+			elif msg["request"] == "challenge_offered":
+				s.send({"type": "move", "request_id": msg["request_id"],
+					"response": {"type": "accept_challenge"}})
+				#s.send({"type": "move", "request_id": msg["request_id"],
+                #        "response": {"type": "reject_challenge"}})
+		elif msg["type"] == "greetings_program":
+			print("Connected to the server.")
 
 def loop(player, *args):
     while True:
