@@ -19,11 +19,17 @@ def shouldStartChallenge(msg):
     #when behind, dark shrine
     if behind(msg):
        return True 
+
+    card_count = 0
+    for a in msg["state"]["hand"]:
+        if a > 10:
+            card_count+=1
+    if card_count >= 3:
+        return True
+
     if msg["state"]["your_points"] >= 8:
-		cards = sorted(msg["state"]["hand"])
-		index = int(len(cards)/2) + 1
-		if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4 or cards[index] > 3:
-			return True
+        if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+            return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
@@ -52,26 +58,18 @@ def getNextHighestCard(msg, theirCard):
     return card
 
 def getLeadCard(msg):
-	tautology = testLeadCardTautology(msg)
-	if tautology != None:
-		return tautology
-	
-	cards = sorted(msg["state"]["hand"])
-	index = int(len(cards)/2)
-	card = cards[index];
-	return card
+    cards = sorted(msg["state"]["hand"])
+    index = int(len(cards)/2)
+    card = cards[index];
+    return card
 
 def respondToPlay(msg, theirCard):
 # if there is no highest card, it returns the lowest card
-	tautology = testTrailCardTautology(msg, theirCard) 
-	if tautology != None:
-		return tautology
-	
-	card = min(msg["state"]["hand"])
-	if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
-		return card
+    card = min(msg["state"]["hand"])
+    if (theirCard - card) >= 5 and msg["state"]["their_tricks"] < 2:
+        return card
 
-	for a in msg["state"]["hand"]:
+    for a in msg["state"]["hand"]:
         if card < theirCard and a == theirCard:
             card = theirCard
         elif a > theirCard:
