@@ -55,11 +55,11 @@ def shouldAcceptChallenge(msg):
     #when behind, dark shrine
     if behind(msg):
        return True 
-	if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-		return True
+    if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
+        return True
     if aheadByEnoughTricks(msg):
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
-			return True
+            return True
     if msg["state"]["their_tricks"] < 3:    # can you win the challenge?
         if float(sum(msg["state"]["hand"]))/len(msg["state"]["hand"]) > 9.4:
             return True
