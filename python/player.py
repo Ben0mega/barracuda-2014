@@ -8,6 +8,7 @@ import struct
 import time
 import sys
 from util import *
+from cc import *
 
 s = 0
 
@@ -66,6 +67,7 @@ def sample_bot(host, port):
 			#NEW GAME
 			if msg["state"]["game_id"] != gameId:
 				gameId = msg["state"]["game_id"]
+				deck = CardCounter()
 				print("New game started: " + str(gameId))
 			
 			#SHOULD CHALLENGE
@@ -78,7 +80,7 @@ def sample_bot(host, port):
 				#YOU GO SECOND
 				if "card" in msg["state"].keys():
 					cardToPlay = respondToPlay(msg, msg["state"]["card"])  
-				
+
 				#YOU GO FIRST
 				else:
 					cardToPlay = getLeadCard(msg)
