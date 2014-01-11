@@ -18,9 +18,9 @@ def getNextHighestCard(msg, theirCard):
     for a in msg["state"]["hand"]:
         if a < bestCard and a > theirCard:
             bestCard = a
-	if bestCard < theirCard:
-		return minCard    
-	return bestCard
+    if bestCard < theirCard:
+        return minCard    
+    return bestCard
 
 def canTie(msg, theirCard):
     if theirCard in msg["state"]["hand"]:    
