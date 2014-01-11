@@ -80,7 +80,7 @@ def shouldStartChallenge(msg, deck):
         return True
 
     if msg["state"]["your_points"] == 9:
-        if calculateHandScore(msg, deck) > 12:
+        if calculateHandScore(msg, deck) > 10:
                 return True
         
     if not isLastCard(msg) and calculateHandScore(msg, deck) > 10:
