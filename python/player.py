@@ -88,8 +88,6 @@ def sample_bot(host, port):
 		elif msg["type"] == "greetings_program":
 			print("Connected to the server.")
 
-		elif msg["type"] == "":
-
 def loop(player, *args):
     while True:
         try:
